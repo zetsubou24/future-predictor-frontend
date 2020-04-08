@@ -2,7 +2,7 @@ import React, {
   useEffect,
   useState,
   forwardRef,
-  useImperativeHandle
+  useImperativeHandle,
 } from "react";
 
 function toFixed(num, fixed) {
@@ -11,12 +11,11 @@ function toFixed(num, fixed) {
 }
 
 const Map = forwardRef((props, ref) => {
-  const [flag, setFlag] = useState(false);
   const [fg, setFg] = useState({});
   const [isDataUpdated, updateData] = useState(0);
   const [future, setFuture] = useState({
     Latitude: toFixed(40.4212216, 5),
-    Longitude: toFixed(-3.6286935, 5)
+    Longitude: toFixed(-3.6286935, 5),
   });
   const TomtomKEY = "2xrfCdFd2nGVXM5iYXAZpueDTqBfFYIh";
   const iconOptions = {
@@ -25,28 +24,28 @@ const Map = forwardRef((props, ref) => {
       secondaryColor: "#ff0000",
       shadow: true,
       size: "md",
-      symbol: "H"
+      symbol: "H",
     },
     restaurant: {
       primaryColor: "#0e2433",
       secondaryColor: "#0e2433",
       shadow: true,
       size: "md",
-      symbol: "R"
+      symbol: "R",
     },
     shoppingcenter: {
       primaryColor: "#ffa500",
       secondaryColor: "#ffa500",
       shadow: true,
       size: "md",
-      symbol: "S"
-    }
+      symbol: "S",
+    },
   };
 
   const fetchUrl = {
     restaurant: `https://api.tomtom.com/search/2/poiSearch/restaurant.json?limit=5&lat=${future.Latitude}&lon=${future.Longitude}&radius=1000&categorySet=7315&key=${TomtomKEY}`,
     hospital: `https://api.tomtom.com/search/2/poiSearch/.json?limit=5&lat=${future.Latitude}&lon=${future.Longitude}&radius=10000&categorySet=7321&key=${TomtomKEY}`,
-    shoppingcenter: `https://api.tomtom.com/search/2/poiSearch/.json?limit=5&lat=${future.Latitude}&lon=${future.Longitude}&radius=10000&categorySet=7373&key=${TomtomKEY}`
+    shoppingcenter: `https://api.tomtom.com/search/2/poiSearch/.json?limit=5&lat=${future.Latitude}&lon=${future.Longitude}&radius=10000&categorySet=7373&key=${TomtomKEY}`,
   };
 
   useImperativeHandle(ref, () => ({
@@ -58,7 +57,7 @@ const Map = forwardRef((props, ref) => {
     },
     findRouteWrapper(location, typeOfLocation) {
       findRoute(location, typeOfLocation);
-    }
+    },
   }));
 
   useEffect(() => {
@@ -69,7 +68,7 @@ const Map = forwardRef((props, ref) => {
     window.L.mapquest.map("map", {
       center: [toFixed(40.4212216, 5), toFixed(-3.6286935, 5)],
       layers: [window.L.mapquest.tileLayer("dark"), newFg],
-      zoom: 15
+      zoom: 15,
     });
 
     window.L.marker([toFixed(40.4212216, 5), toFixed(-3.6286935, 5)], {
@@ -77,17 +76,17 @@ const Map = forwardRef((props, ref) => {
         primaryColor: "#101820",
         secondaryColor: "#417505",
         shadow: true,
-        size: "md"
-      })
+        size: "md",
+      }),
     }).addTo(newFg);
   }, []);
 
   const handleApiCall = () => {
-    fetch("http://localhost:5000/getLocation")
-      .then(response => {
+    fetch("https://patch-2-paulabackendservice.azurewebsites.net/loc")
+      .then((response) => {
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         console.log(data);
         setFuture(data);
         console.log(data.Latitude, typeof data.Latitude);
@@ -95,7 +94,7 @@ const Map = forwardRef((props, ref) => {
         directions.route(
           {
             start: [toFixed(40.4212216, 5), toFixed(-3.6286935, 5)],
-            end: [data.Latitude, data.Longitude]
+            end: [data.Latitude, data.Longitude],
           },
           addCustomLayer
         );
@@ -106,26 +105,26 @@ const Map = forwardRef((props, ref) => {
               iconOptions: {
                 size: "md",
                 primaryColor: "#101820",
-                secondaryColor: "#417505"
+                secondaryColor: "#417505",
               },
               draggable: false,
-              title: "You are here"
+              title: "You are here",
             },
             endMarker: {
               icon: "marker",
               iconOptions: {
                 size: "md",
                 primaryColor: "#101820",
-                secondaryColor: "#800000"
+                secondaryColor: "#800000",
               },
-              title: "Possible destination"
+              title: "Possible destination",
             },
             routeRibbon: {
               color: "#2aa6ce",
               opacity: 1.0,
-              showTraffic: false
+              showTraffic: false,
             },
-            directionsResponse: response
+            directionsResponse: response,
           });
           customLayer.addTo(fg);
         }
@@ -133,13 +132,13 @@ const Map = forwardRef((props, ref) => {
       });
   };
 
-  const findNearbyLocation = async typeOfLocation => {
+  const findNearbyLocation = async (typeOfLocation) => {
     var restaurants = [];
     await fetch(fetchUrl[typeOfLocation])
-      .then(response => {
+      .then((response) => {
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         restaurants = data;
       });
     return restaurants;
@@ -153,8 +152,8 @@ const Map = forwardRef((props, ref) => {
         start: [toFixed(40.4212216, 5), toFixed(-3.6286935, 5)],
         end: [
           toFixed(location.position.lat, 5),
-          toFixed(location.position.lon, 5)
-        ]
+          toFixed(location.position.lon, 5),
+        ],
       },
       addCustomLayer
     );
@@ -165,22 +164,22 @@ const Map = forwardRef((props, ref) => {
           iconOptions: {
             size: "md",
             primaryColor: "#101820",
-            secondaryColor: "#417505"
+            secondaryColor: "#417505",
           },
           draggable: false,
-          title: "You are here"
+          title: "You are here",
         },
         endMarker: {
           icon: "marker",
           iconOptions: iconOptions[typeOfLocation],
-          title: location.poi.name
+          title: location.poi.name,
         },
         routeRibbon: {
           color: "#2aa6ce",
           opacity: 1.0,
-          showTraffic: false
+          showTraffic: false,
         },
-        directionsResponse: response
+        directionsResponse: response,
       });
       customLayer.addTo(fg);
     }
